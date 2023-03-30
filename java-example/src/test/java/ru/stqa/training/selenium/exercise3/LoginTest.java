@@ -26,7 +26,7 @@ public class LoginTest {
   @Test
   public void loginTest() {
     driver.get("http://litecart.stqa.ru");
-    driver.findElement(By.cssSelector("input[name='email']")).sendKeys("litecart@gmail.com");
+    driver.findElement(By.cssSelector("input[name='email']")).sendKeys("litecarts@gmail.com");
     driver.findElement(By.cssSelector("input[name='password']")).sendKeys("1234567890");
     driver.findElement(By.cssSelector("button[name='login']")).click();
   }
