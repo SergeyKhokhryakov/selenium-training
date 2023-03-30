@@ -1,0 +1,5 @@
+rootProject.name = 'selenium-training'
+include 'java-example'
+include 'java-example:training.selenium'
+findProject(':java-example:training.selenium')?.name = 'training.selenium'
+
