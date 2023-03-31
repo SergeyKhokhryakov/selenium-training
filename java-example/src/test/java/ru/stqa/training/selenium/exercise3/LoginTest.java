@@ -5,8 +5,16 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.Browser;
+import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.safari.SafariOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -15,14 +23,31 @@ public class LoginTest {
   public static WebDriver driver;
   //public static SafariDriver driver;
   public static WebDriverWait wait;
+  public static Browser browser;
   //@EnabledOnOs(OS.MAC)
   @BeforeAll
   static public void start() {
+    browser = Browser.SAFARI;
+    if (browser.equals(Browser.FIREFOX)){
+      FirefoxOptions options = new FirefoxOptions();
+      options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+      driver = new FirefoxDriver(options);
+      driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
+    } else if (browser.equals(Browser.CHROME)){
+      //Для версии Chrome (chromedriver) 111.0.5563.64 (Официальная сборка), (x86_64)
+      ChromeOptions options = new ChromeOptions();
+      options.addArguments("--remote-allow-origins=*");
+      driver = new ChromeDriver(options);
+    } else if (browser.equals(Browser.EDGE)){
       driver = new EdgeDriver();
-      //SafariOptions options = new SafariOptions();
-      //driver = new SafariDriver(options);
+    } else if (browser.equals(Browser.SAFARI)){
+      SafariOptions options = new SafariOptions();
+      driver = new SafariDriver(options);
+    }
+    if (browser != Browser.FIREFOX) {
       wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
+  }
   @Test
   public void loginTest() {
     driver.get("http://litecart.stqa.ru");
