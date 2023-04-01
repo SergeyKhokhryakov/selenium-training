@@ -1,4 +1,4 @@
-package ru.stqa.training.selenium.exercise3;
+package ru.stqa.training.selenium.exercise8;
 
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
