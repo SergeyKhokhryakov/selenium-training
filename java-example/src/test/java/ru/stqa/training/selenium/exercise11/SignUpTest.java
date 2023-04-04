@@ -78,7 +78,8 @@ public class SignUpTest {
     int index = (int) (Math.random() * 100);
     String email = "email_" + index + "@gmail.com";
     driver.findElement(By.cssSelector("input[name='email']")).sendKeys(email);
-    driver.findElement(By.cssSelector("input[name='phone']")).sendKeys("+79111234419");
+    String code = driver.findElement(By.cssSelector("input[name='phone']")).getAttribute("placeholder");
+    driver.findElement(By.cssSelector("input[name='phone']")).sendKeys(code+"9111234419");
     String password = "12345";
     driver.findElement(By.cssSelector("input[name='password']")).sendKeys(password);
     driver.findElement(By.cssSelector("input[name='confirmed_password']")).sendKeys(password);
