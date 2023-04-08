@@ -90,7 +90,7 @@ public class CartTest {
     List<WebElement> elements = driver.findElements(By.cssSelector("#checkout-cart-wrapper ul[class='items']>li"));
     while (elements.size() != 0){
       elements.get(0).findElement(By.cssSelector("button[name='remove_cart_item']")).click();
-      wait.until(ExpectedConditions.stalenessOf(dataTable.get(dataTable.size()-1))); // ожидание обновления таблицы внизу таблицы
+      wait.until(ExpectedConditions.stalenessOf(dataTable.get(dataTable.size()-1))); // ожидание обновления таблицы внизу страницы
       wait.until(ExpectedConditions.stalenessOf(elements.get(elements.size()-1))); // ожидание обновления основной таблицы корзины
       dataTable = driver.findElements(By.cssSelector("table[class*='dataTable'] tr"));
       elements = driver.findElements(By.cssSelector("#checkout-cart-wrapper ul[class='items']>li"));
