@@ -66,7 +66,7 @@ public class CartTest {
     driver.findElement(By.cssSelector("input[name='email']")).sendKeys("litecarts@gmail.com");
     driver.findElement(By.cssSelector("input[name='password']")).sendKeys("1234567890");
     driver.findElement(By.cssSelector("button[name='login']")).click();
-    s.assertThat(driver.findElement(By.cssSelector("#notices i")).getText()).isSubstringOf("logged in");
+    s.assertThat(driver.findElement(By.cssSelector("div [class='notice success']")).getText()).contains("logged in");
   }
 
   @Test
