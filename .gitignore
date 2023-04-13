@@ -29,4 +29,6 @@ gradle-app.setting
 
 .DS_Store
 ._*
+*.png
+*.har
 .idea/workspace.xml
