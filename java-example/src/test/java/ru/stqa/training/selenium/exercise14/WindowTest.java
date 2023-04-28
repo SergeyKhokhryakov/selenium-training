@@ -163,12 +163,11 @@ public class WindowTest {
       System.out.println(l.getResponse().getStatus() + ":" + l.getRequest().getUrl());
     }
      */
-    /*
+
     System.out.println(driver.manage().logs().getAvailableLogTypes());
     for (LogEntry l : driver.manage().logs().get("performance").getAll()) {
       System.out.println(l);
     }
-     */
 
     String handle = driver.getWindowHandle();
     driver.findElement(By.cssSelector("a[target]")).click();
@@ -188,6 +187,7 @@ public class WindowTest {
   @AfterAll
   static public void stop() {
     driver.quit();
+    proxy.stop();
     driver = null;
   }
 
