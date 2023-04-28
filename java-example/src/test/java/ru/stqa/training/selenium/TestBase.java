@@ -65,7 +65,7 @@ public class TestBase {
       //Для версии Chrome (chromedriver) 111.0.5563.64 (Официальная сборка), (x86_64)
       ChromeOptions options = new ChromeOptions();
       LoggingPreferences logPrefs = new LoggingPreferences();
-      //logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
+      logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
       logPrefs.enable(LogType.BROWSER, Level.ALL);
       options.setCapability("goog:loggingPrefs", logPrefs);
       options.addArguments("--remote-allow-origins=*");

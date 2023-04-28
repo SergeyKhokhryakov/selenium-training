@@ -34,6 +34,11 @@ public class WindowTest extends TestBase{
      */
 
     System.out.println(driver.manage().logs().getAvailableLogTypes());
+
+    for (LogEntry l : driver.manage().logs().get("browser").getAll()) {
+      System.out.println(l);
+    }
+
     for (LogEntry l : driver.manage().logs().get("performance").getAll()) {
       System.out.println(l);
     }

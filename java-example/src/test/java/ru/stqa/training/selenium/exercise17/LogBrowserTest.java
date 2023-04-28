@@ -56,7 +56,6 @@ public class LogBrowserTest extends TestBase {
           System.out.println(l);
         }
       }
-
       driver.navigate().back();
     }
     driver.close();
