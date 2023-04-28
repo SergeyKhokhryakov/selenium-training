@@ -1,73 +1,28 @@
 package ru.stqa.training.selenium.exercise10;
 
-import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.By;
-import org.openqa.selenium.PageLoadStrategy;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.remote.Browser;
-import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.safari.SafariOptions;
 import org.openqa.selenium.support.Color;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import ru.stqa.training.selenium.TestBase;
 
-import java.time.Duration;
 import java.util.List;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ProductTest {
-  public static WebDriver driver;
-  //public static SafariDriver driver;
-  public static WebDriverWait wait;
-  public static Browser browser;
-  private SoftAssertions s = new SoftAssertions();
+public class ProductTest extends TestBase {
+
   //@EnabledOnOs(OS.MAC)
-  @BeforeAll
-  static public void start() {
-    browser = Browser.CHROME;
-    if (browser.equals(Browser.FIREFOX)){
-      FirefoxOptions options = new FirefoxOptions();
-      options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
-      driver = new FirefoxDriver(options);
-      driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
-    } else if (browser.equals(Browser.CHROME)){
-      //Для версии Chrome (chromedriver) 111.0.5563.64 (Официальная сборка), (x86_64)
-      ChromeOptions options = new ChromeOptions();
-      options.addArguments("--remote-allow-origins=*");
-      driver = new ChromeDriver(options);
-    } else if (browser.equals(Browser.EDGE)){
-      driver = new EdgeDriver();
-    } else if (browser.equals(Browser.SAFARI)){
-      SafariOptions options = new SafariOptions();
-      driver = new SafariDriver(options);
-    }
-    if (browser != Browser.FIREFOX) {
-      wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    }
-  }
-  @BeforeEach
-  public void idle(){
-
-  }
-  @Test
-  @Order(1)
-  public void loginTest() {
-    driver.get("http://litecart.stqa.ru");
-    driver.findElement(By.cssSelector("input[name='email']")).sendKeys("litecarts@gmail.com");
-    driver.findElement(By.cssSelector("input[name='password']")).sendKeys("1234567890");
-    driver.findElement(By.cssSelector("button[name='login']")).click();
-    s.assertThat(driver.findElement(By.cssSelector("div [class='notice success']")).getText()).contains("logged in");
-  }
 
   @Test
-  @Order(2)
+  //@Order(2)
   public void checkingProductTest(){
+    driver.get("http://litecart.stqa.ru");
+
+    loginUser("litecarts@gmail.com", "1234567890");
+    s.assertThat(driver.findElement(By.cssSelector("div [class='notice success']")).getText()).contains("logged in");
+
     List<WebElement> elements = driver.findElements(By.cssSelector("#box-campaigns ul>li"));
     String name = elements.get(0).findElement(By.cssSelector(".name")).getText();
     WebElement element = elements.get(0).findElement(By.cssSelector("#box-campaigns .regular-price"));
@@ -113,17 +68,6 @@ public class ProductTest {
     // крупный текст: large (18px) x-large (24px)
     float size = Float.parseFloat(element.getCssValue("font-size").split("px")[0]);
     s.assertThat(size).isBetween(18.0F, 24.0F);
-  }
-
-  @AfterEach
-  public void home(){
-    s.assertAll();
-    driver.findElement(By.cssSelector("#site-menu .general-0 a")).click();
-  }
-  @AfterAll
-  static public void stop() {
-    driver.quit();
-    driver = null;
   }
 
 }

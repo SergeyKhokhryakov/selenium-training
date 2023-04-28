@@ -123,6 +123,7 @@ public class TestBase {
   @AfterEach
   public void home(){
     s.assertAll();
+    driver.findElement(By.cssSelector("#site-menu .general-0 a")).click();
   }
 
   public static class MyListener implements WebDriverListener {

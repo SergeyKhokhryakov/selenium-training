@@ -16,7 +16,7 @@ public class SignUpTest extends TestBase {
   //@Order(2)
   public void signUpTest(){
     driver.get("http://litecart.stqa.ru");
-    
+
     driver.findElement(By.cssSelector(".content a[href*='create_account']")).click();
     driver.findElement(By.cssSelector("input[name='firstname']")).sendKeys("Igor");
     driver.findElement(By.cssSelector("input[name='lastname']")).sendKeys("Prigozyn");
