@@ -114,7 +114,10 @@ public class TestBase {
     driver.findElement(By.cssSelector("input[name='email']")).sendKeys(email);
     driver.findElement(By.cssSelector("input[name='password']")).sendKeys(password);
     driver.findElement(By.cssSelector("button[name='login']")).click();
-    s.assertThat(driver.findElement(By.cssSelector("div [class='notice success']")).getText()).contains("logged in");
+  }
+
+  protected static void logout() {
+    driver.findElement(By.cssSelector(".content .list-vertical a[href*='logout']")).click();
   }
 
   @AfterEach
