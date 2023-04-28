@@ -65,7 +65,8 @@ public class TestBase {
       //Для версии Chrome (chromedriver) 111.0.5563.64 (Официальная сборка), (x86_64)
       ChromeOptions options = new ChromeOptions();
       LoggingPreferences logPrefs = new LoggingPreferences();
-      logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
+      //logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
+      logPrefs.enable(LogType.BROWSER, Level.ALL);
       options.setCapability("goog:loggingPrefs", logPrefs);
       options.addArguments("--remote-allow-origins=*");
 
@@ -130,12 +131,12 @@ public class TestBase {
 
     @Override
     public void beforeFindElement(WebDriver driver, By locator) {
-      System.out.println(locator);
+      //System.out.println(locator);
     }
 
     @Override
     public void afterFindElement(WebDriver driver, By locator, WebElement result) {
-      System.out.println(locator +  " found");
+      //System.out.println(locator +  " found");
     }
     @Override
     public void onError(Object target, Method method, Object[] args, InvocationTargetException e) {
