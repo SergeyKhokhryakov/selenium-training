@@ -77,8 +77,8 @@ public class SortTest {
   @Test
   @Order(3)
   public void isSortZoneTest(){
-   // driver.findElement(By.cssSelector(".content .list-vertical a[href*='edit']")).click();
-   // driver.findElement(By.linkText("Change")).click();
+    // driver.findElement(By.cssSelector(".content .list-vertical a[href*='edit']")).click();
+    // driver.findElement(By.linkText("Change")).click();
     WebElement list = driver.findElement(By.xpath("(//select[@name='country_code'])[2]"));
     int length = driver.findElements(By.xpath("(//select[@name='country_code'])[2]/option")).size();
     Select select = new Select(list);
@@ -91,7 +91,7 @@ public class SortTest {
         checkingList(By.xpath("(//select[@name='zone_code'])[1]/option"));
       }
     }
-   // driver.findElement(By.id("fancybox-close")).click();
+    // driver.findElement(By.id("fancybox-close")).click();
   }
 
   protected void checkingList(By locator) {
@@ -112,8 +112,8 @@ public class SortTest {
   @AfterEach
   public void home(){
     s.assertAll();
-   // driver.findElement(By.id("fancybox-close")).click();
-   // driver.findElement(By.cssSelector("#site-menu .general-0 a")).click();
+    // driver.findElement(By.id("fancybox-close")).click();
+    // driver.findElement(By.cssSelector("#site-menu .general-0 a")).click();
   }
   @AfterAll
   static public void stop() {
