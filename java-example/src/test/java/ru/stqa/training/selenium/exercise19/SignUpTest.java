@@ -4,39 +4,31 @@ import com.mifmif.common.regex.Generex;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
 
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SignUpTest extends TestBase {
 
   //@EnabledOnOs(OS.MAC)
 
-  @Test
-  //@Order(2)
-  public void signUpTest(){
-   
-    int index = (int) (Math.random() * 100);
-    Customer customer = Customer.newEntity()
-                    .withFirstname("Igor").withLastname("Prigozyn").withPhone("9111234419")
-                    .withAddress1("street Tverskaya, 10-2-187").withPostcode("MyPostCode-14212").withCity("Moscow")
-                    .withCountry("RU").withZone("GA")
-                    .withEmail("email_" + index + "@gmail.com")
-                    .withPassword("12345").build();
+  @ParameterizedTest
+  @ArgumentsSource(DataProviders.class)
+  public void signUpTest(Customer customer){
 
     driver.get("http://litecart.stqa.ru");
-
-
-
 
     driver.findElement(By.cssSelector(".content a[href*='create_account']")).click();
     driver.findElement(By.cssSelector("input[name='firstname']")).sendKeys(customer.getFirstname());
     driver.findElement(By.cssSelector("input[name='lastname']")).sendKeys(customer.getLastname());
     driver.findElement(By.cssSelector("input[name='address1']")).sendKeys(customer.getAddress1());
-    //driver.findElement(By.cssSelector("input[name='postcode']")).sendKeys(customer.getPostcode());
     driver.findElement(By.cssSelector("input[name='city']")).sendKeys(customer.getCity());
 
     driver.findElement(By.cssSelector("[id ^= 'select2-country_code']")).click();
