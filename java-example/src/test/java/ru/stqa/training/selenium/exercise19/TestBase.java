@@ -1,11 +1,14 @@
-package ru.stqa.training.selenium;
+package ru.stqa.training.selenium.exercise19;
 
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.client.ClientUtil;
 import net.lightbody.bmp.proxy.CaptureType;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -33,7 +36,7 @@ import java.time.Duration;
 import java.util.logging.Level;
 
 public class TestBase {
-
+  public static ThreadLocal<WebDriver> tlDriver = new ThreadLocal<>();
   protected static WebDriver driver;
   //public static SafariDriver driver;
   protected static WebDriverWait wait;
@@ -44,6 +47,12 @@ public class TestBase {
 
   @BeforeAll
   static public void start() throws UnknownHostException {
+    if (tlDriver.get() != null){
+      driver = tlDriver.get();
+      wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    }
+
+
     // start the proxy
     proxy = new BrowserMobProxyServer();
     // proxy.setTrustAllServers(true);
@@ -85,6 +94,7 @@ public class TestBase {
       //capabilities.setCapability(ChromeOptions.CAPABILITY, options);
       //options.merge(capabilities);
       driver = new EventFiringDecorator(new MyListener()).decorate(new ChromeDriver(options));
+      tlDriver.set(driver);
 
       //driver = new ChromeDriver(options);
     } else if (browser.equals(Browser.EDGE)) {
@@ -95,15 +105,18 @@ public class TestBase {
       driver = new EventFiringDecorator(new MyListener()).decorate(new SafariDriver(options));
       //driver = new SafariDriver(options);
     }
-    driver.manage().timeouts().implicitlyWait(Duration.ofMillis(10000));
-    wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    driver.manage().timeouts().implicitlyWait(Duration.ofMillis(5000));
+    wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+    Runtime.getRuntime().addShutdownHook(
+            new Thread(() -> { driver.quit(); driver = null;})
+    );
   }
 
   @AfterAll
   static public void stop() {
-    driver.quit();
+    //driver.quit();
     proxy.stop();
-    driver = null;
+    //driver = null;
   }
 
   @BeforeEach
