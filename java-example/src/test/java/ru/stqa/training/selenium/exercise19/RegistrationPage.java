@@ -11,40 +11,30 @@ import org.openqa.selenium.support.ui.Select;
 public class RegistrationPage extends Page {
   public RegistrationPage (WebDriver driver){
     super(driver);
+    PageFactory.initElements(driver, this);
   }
   public void open(){
     driver.get("http://litecart.stqa.ru");
     driver.findElement(By.cssSelector(".content a[href*='create_account']")).click();
   }
 
-  public WebElement firstnameInput(){
-    return driver.findElement(By.name("firstname"));
-  }
+  @FindBy(name = "firstname")
+  public WebElement firstnameInput;
 
-  public WebElement lastnameInput(){
-    return driver.findElement(By.name("lastname"));
-  }
-  public WebElement address1Input(){
-    return driver.findElement(By.name("address1"));
-  }
-  public WebElement cityInput(){
-    return driver.findElement(By.name("city"));
-  }
-  public WebElement emailInput (){
-    return driver.findElement(By.name("email"));
-  }
-  public WebElement phoneInput(){
-    return driver.findElement(By.name("phone"));
-  }
-  public WebElement passwordInput(){
-    return driver.findElement(By.name("password"));
-  }
-  public WebElement confirmedPasswordInput(){
-    return driver.findElement(By.name("confirmed_password"));
-  }
-  public WebElement createAccountButton (){
-    return driver.findElement(By.name("create_account"));
-  }
+  @FindBy(name = "lastname")
+  public WebElement lastnameInput;
+  @FindBy(name = "address1")
+  public WebElement address1Input;
+  @FindBy(name = "city")
+  public WebElement cityInput;
+  @FindBy(name = "email")
+  public WebElement emailInput ;
+  @FindBy(name = "password")
+  public WebElement passwordInput;
+  @FindBy(name = "confirmed_password")
+  public WebElement confirmedPasswordInput;
+  @FindBy(name = "create_account")
+  public WebElement createAccountButton;
   public WebElement logoutLink (){
     return  driver.findElement(By.cssSelector(".content .list-vertical a[href*='logout']"));
   }

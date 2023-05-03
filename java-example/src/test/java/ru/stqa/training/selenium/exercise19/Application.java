@@ -80,18 +80,18 @@ public class Application {
   }
   public void registerNewCustomer(Customer customer) {
     registrationPage.open();
-    registrationPage.firstnameInput().sendKeys(customer.getFirstname());
-    registrationPage.lastnameInput().sendKeys(customer.getLastname());
-    registrationPage.address1Input().sendKeys(customer.getAddress1());
-    registrationPage.cityInput().sendKeys(customer.getCity());
+    registrationPage.firstnameInput.sendKeys(customer.getFirstname());
+    registrationPage.lastnameInput.sendKeys(customer.getLastname());
+    registrationPage.address1Input.sendKeys(customer.getAddress1());
+    registrationPage.cityInput.sendKeys(customer.getCity());
     registrationPage.selectCountry(customer.getCountry());
     registrationPage.inputPostCode(customer.getPostcode());
     registrationPage.selectZone(customer.getZone());
-    registrationPage.emailInput().sendKeys(customer.getEmail());
+    registrationPage.emailInput.sendKeys(customer.getEmail());
     registrationPage.inputPhone(customer.getPhone());
-    registrationPage.passwordInput().sendKeys(customer.getPassword());
-    registrationPage.confirmedPasswordInput().sendKeys(customer.getPassword());
-    registrationPage.createAccountButton().click();
+    registrationPage.passwordInput.sendKeys(customer.getPassword());
+    registrationPage.confirmedPasswordInput.sendKeys(customer.getPassword());
+    registrationPage.createAccountButton.click();
   }
 
   public String textSuccess(){
