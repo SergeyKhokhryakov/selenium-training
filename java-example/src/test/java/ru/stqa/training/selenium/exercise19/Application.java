@@ -30,6 +30,8 @@ public class Application {
   private WebDriver driver;
   //public static SafariDriver driver;
   private WebDriverWait wait;
+  private RegistrationPage registrationPage;
+  private CustomerPanelLoginPage customerPanelLoginPage;
   private Browser browser;
   public Application () {
     browser = Browser.CHROME;
@@ -62,12 +64,12 @@ public class Application {
     }
     driver.manage().timeouts().implicitlyWait(Duration.ofMillis(5000));
     wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+    registrationPage = new RegistrationPage(driver);
+    customerPanelLoginPage = new CustomerPanelLoginPage(driver);
   }
 
   public void loginUser(String email, String password) {
-    driver.findElement(By.cssSelector("input[name='email']")).sendKeys(email);
-    driver.findElement(By.cssSelector("input[name='password']")).sendKeys(password);
-    driver.findElement(By.cssSelector("button[name='login']")).click();
+    customerPanelLoginPage.enterEmail(email).enterPassword(password).submitLogin();
   }
 
   protected void logout() {
@@ -77,16 +79,15 @@ public class Application {
     driver.findElement(By.cssSelector("#site-menu .general-0 a")).click();
   }
   public void registerNewCustomer(Customer customer) {
-    driver.get("http://litecart.stqa.ru");
-
-    driver.findElement(By.cssSelector(".content a[href*='create_account']")).click();
-    driver.findElement(By.cssSelector("input[name='firstname']")).sendKeys(customer.getFirstname());
-    driver.findElement(By.cssSelector("input[name='lastname']")).sendKeys(customer.getLastname());
-    driver.findElement(By.cssSelector("input[name='address1']")).sendKeys(customer.getAddress1());
-    driver.findElement(By.cssSelector("input[name='city']")).sendKeys(customer.getCity());
+    registrationPage.open();
+    registrationPage.firstnameInput().sendKeys(customer.getFirstname());
+    registrationPage.lastnameInput().sendKeys(customer.getLastname());
+    registrationPage.address1Input().sendKeys(customer.getAddress1());
+    registrationPage.cityInput().sendKeys(customer.getCity());
 
     driver.findElement(By.cssSelector("[id ^= 'select2-country_code']")).click();
     driver.findElement(By.cssSelector(".select2-results__option[id $= '" + customer.getCountry() + "']")).click();
+
     // генерация строки postcode на основе регулярного выражения, соответствующего стране country
     // если для страны не определен шаблон regexp, то значением является аргумент (customer.getPostcode()) теста
     String pattern = driver.findElement(By.cssSelector("input[name='postcode']")).getAttribute("pattern");
@@ -105,13 +106,14 @@ public class Application {
       new Select(driver.findElement(By.xpath("//select[@name='zone_code']"))).selectByValue(customer.getZone());
     }
 
-    driver.findElement(By.cssSelector("input[name='email']")).sendKeys(customer.getEmail());
+    registrationPage.emailInput().sendKeys(customer.getEmail());
+
     String code = driver.findElement(By.cssSelector("input[name='phone']")).getAttribute("placeholder");
     driver.findElement(By.cssSelector("input[name='phone']")).sendKeys(code+ customer.getPhone());
 
-    driver.findElement(By.cssSelector("input[name='password']")).sendKeys(customer.getPassword());
-    driver.findElement(By.cssSelector("input[name='confirmed_password']")).sendKeys(customer.getPassword());
-    driver.findElement(By.cssSelector("button[name='create_account']")).click();
+    registrationPage.passwordInput().sendKeys(customer.getPassword());
+    registrationPage.confirmedPasswordInput().sendKeys(customer.getPassword());
+    registrationPage.createAccountButton().click();
   }
 
   public String textLoggedIn (){
