@@ -1,6 +1,5 @@
 package ru.stqa.training.selenium.exercise19;
 
-import com.mifmif.common.regex.Generex;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -15,7 +14,6 @@ import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.safari.SafariOptions;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.events.WebDriverListener;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
@@ -32,6 +30,7 @@ public class Application {
   private WebDriverWait wait;
   private RegistrationPage registrationPage;
   private CustomerPanelLoginPage customerPanelLoginPage;
+  private CommonPage commonPage;
   private Browser browser;
   public Application () {
     browser = Browser.CHROME;
@@ -66,6 +65,7 @@ public class Application {
     wait = new WebDriverWait(driver, Duration.ofSeconds(5));
     registrationPage = new RegistrationPage(driver);
     customerPanelLoginPage = new CustomerPanelLoginPage(driver);
+    commonPage = new CommonPage(driver);
   }
 
   public void loginUser(String email, String password) {
@@ -73,10 +73,10 @@ public class Application {
   }
 
   protected void logout() {
-    driver.findElement(By.cssSelector(".content .list-vertical a[href*='logout']")).click();
+    registrationPage.logoutLink().click();
   }
   public void home(){
-    driver.findElement(By.cssSelector("#site-menu .general-0 a")).click();
+    commonPage.homeLink().click();
   }
   public void registerNewCustomer(Customer customer) {
     registrationPage.open();
@@ -84,40 +84,18 @@ public class Application {
     registrationPage.lastnameInput().sendKeys(customer.getLastname());
     registrationPage.address1Input().sendKeys(customer.getAddress1());
     registrationPage.cityInput().sendKeys(customer.getCity());
-
-    driver.findElement(By.cssSelector("[id ^= 'select2-country_code']")).click();
-    driver.findElement(By.cssSelector(".select2-results__option[id $= '" + customer.getCountry() + "']")).click();
-
-    // генерация строки postcode на основе регулярного выражения, соответствующего стране country
-    // если для страны не определен шаблон regexp, то значением является аргумент (customer.getPostcode()) теста
-    String pattern = driver.findElement(By.cssSelector("input[name='postcode']")).getAttribute("pattern");
-    if (pattern.length() == 0){
-      driver.findElement(By.cssSelector("input[name='postcode']")).sendKeys(customer.getPostcode());
-    } else {
-      Generex generex = new Generex(pattern);
-      String postCode = generex.random();
-      driver.findElement(By.cssSelector("input[name='postcode']")).sendKeys(postCode);
-    }
-    // если у страны имеются географические зоны (disabled == null), то ждем их подгрузки и выбираем требуемую зону
-    // ииначе (disabled == "true") - пропускаем
-    String disabled = driver.findElement(By.xpath("//select[@name='zone_code']")).getAttribute("disabled");
-    if (disabled == null) {
-      wait.until((WebDriver wd) -> wd.findElements(By.xpath("//select[@name='zone_code']/option")));
-      new Select(driver.findElement(By.xpath("//select[@name='zone_code']"))).selectByValue(customer.getZone());
-    }
-
+    registrationPage.selectCountry(customer.getCountry());
+    registrationPage.inputPostCode(customer.getPostcode());
+    registrationPage.selectZone(customer.getZone());
     registrationPage.emailInput().sendKeys(customer.getEmail());
-
-    String code = driver.findElement(By.cssSelector("input[name='phone']")).getAttribute("placeholder");
-    driver.findElement(By.cssSelector("input[name='phone']")).sendKeys(code+ customer.getPhone());
-
+    registrationPage.inputPhone(customer.getPhone());
     registrationPage.passwordInput().sendKeys(customer.getPassword());
     registrationPage.confirmedPasswordInput().sendKeys(customer.getPassword());
     registrationPage.createAccountButton().click();
   }
 
-  public String textLoggedIn (){
-    return driver.findElement(By.cssSelector("div [class='notice success']")).getText();
+  public String textSuccess(){
+    return commonPage.textSuccess();
   }
 
   public void quit (){

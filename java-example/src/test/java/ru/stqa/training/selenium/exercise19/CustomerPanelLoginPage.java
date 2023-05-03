@@ -27,4 +27,6 @@ public class CustomerPanelLoginPage extends Page {
   public void submitLogin (){
     driver.findElement(By.cssSelector("button[name='login']")).click();
   }
+
+
 }

@@ -15,7 +15,7 @@ public class SignUpTest extends TestBase {
     app.logout();
 
     app.loginUser(customer.getEmail(), customer.getPassword());
-    s.assertThat(app.textLoggedIn())
+    s.assertThat(app.textSuccess())
             .contains("logged in")
             .contains(customer.getFirstname() + " " + customer.getLastname());
     app.logout();
