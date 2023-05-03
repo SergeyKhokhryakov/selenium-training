@@ -1,7 +1,8 @@
-package ru.stqa.training.selenium.exercise19;
+package ru.stqa.training.selenium.exercise19.tests;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import ru.stqa.training.selenium.exercise19.model.Customer;
 
 
 public class SignUpTest extends TestBase {

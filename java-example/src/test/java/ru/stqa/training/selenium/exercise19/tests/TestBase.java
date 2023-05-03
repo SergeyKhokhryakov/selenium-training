@@ -1,8 +1,9 @@
-package ru.stqa.training.selenium.exercise19;
+package ru.stqa.training.selenium.exercise19.tests;
 
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import ru.stqa.training.selenium.exercise19.app.Application;
 
 public class TestBase {
   public static ThreadLocal<Application> tlApp = new ThreadLocal<>();

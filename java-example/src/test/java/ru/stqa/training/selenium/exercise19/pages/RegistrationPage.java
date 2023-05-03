@@ -1,4 +1,4 @@
-package ru.stqa.training.selenium.exercise19;
+package ru.stqa.training.selenium.exercise19.pages;
 
 import com.mifmif.common.regex.Generex;
 import org.openqa.selenium.By;

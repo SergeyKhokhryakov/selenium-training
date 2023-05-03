@@ -1,8 +1,9 @@
-package ru.stqa.training.selenium.exercise19;
+package ru.stqa.training.selenium.exercise19.tests;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
+import ru.stqa.training.selenium.exercise19.model.Customer;
 
 import java.util.stream.Stream;
 

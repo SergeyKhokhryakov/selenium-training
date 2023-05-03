@@ -1,4 +1,4 @@
-package ru.stqa.training.selenium.exercise19;
+package ru.stqa.training.selenium.exercise19.model;
 
 public class Customer {
   private String firstname;

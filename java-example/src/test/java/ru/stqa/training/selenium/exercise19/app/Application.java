@@ -1,4 +1,4 @@
-package ru.stqa.training.selenium.exercise19;
+package ru.stqa.training.selenium.exercise19.app;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -15,6 +15,10 @@ import org.openqa.selenium.safari.SafariOptions;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.events.WebDriverListener;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import ru.stqa.training.selenium.exercise19.pages.CommonPage;
+import ru.stqa.training.selenium.exercise19.pages.CustomerPanelLoginPage;
+import ru.stqa.training.selenium.exercise19.pages.RegistrationPage;
+import ru.stqa.training.selenium.exercise19.model.Customer;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,7 +76,7 @@ public class Application {
     customerPanelLoginPage.enterEmail(email).enterPassword(password).submitLogin();
   }
 
-  protected void logout() {
+  public void logout() {
     registrationPage.logoutLink().click();
   }
   public void home(){
