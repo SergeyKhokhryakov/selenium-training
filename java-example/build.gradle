@@ -30,6 +30,9 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation  'net.lightbody.bmp:browsermob-core:2.1.5'
     testImplementation 'io.netty:netty-all:4.1.91.Final'
+    // https://mvnrepository.com/artifact/com.github.mifmif/generex
+    implementation 'com.github.mifmif:generex:1.0.2'
+
 
 
 }

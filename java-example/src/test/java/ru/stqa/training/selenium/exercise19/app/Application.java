@@ -1,11 +1,5 @@
-package ru.stqa.training.selenium;
+package ru.stqa.training.selenium.exercise19.app;
 
-import net.lightbody.bmp.BrowserMobProxy;
-import net.lightbody.bmp.BrowserMobProxyServer;
-import net.lightbody.bmp.client.ClientUtil;
-import net.lightbody.bmp.proxy.CaptureType;
-import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -21,40 +15,28 @@ import org.openqa.selenium.safari.SafariOptions;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.events.WebDriverListener;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import ru.stqa.training.selenium.exercise19.pages.CommonPage;
+import ru.stqa.training.selenium.exercise19.pages.CustomerPanelLoginPage;
+import ru.stqa.training.selenium.exercise19.pages.RegistrationPage;
+import ru.stqa.training.selenium.exercise19.model.Customer;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.Inet4Address;
-import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.time.Duration;
 import java.util.logging.Level;
 
-public class TestBase {
-
-  protected static WebDriver driver;
+public class Application {
+  private WebDriver driver;
   //public static SafariDriver driver;
-  protected static WebDriverWait wait;
-  protected static Browser browser;
-  protected static BrowserMobProxy proxy;
-  protected static Proxy seleniumProxy;
-  protected SoftAssertions s = new SoftAssertions();
-
-  @BeforeAll
-  static public void start() throws UnknownHostException {
-    // start the proxy
-    proxy = new BrowserMobProxyServer();
-    // proxy.setTrustAllServers(true);
-    proxy.start(8080);
-    // get the Selenium proxy object
-    seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
-    String hostIp = Inet4Address.getLocalHost().getHostAddress();
-    seleniumProxy.setHttpProxy(hostIp + ":" + proxy.getPort());
-    seleniumProxy.setSslProxy(hostIp + ":" + proxy.getPort());
-    proxy.enableHarCaptureTypes(CaptureType.REQUEST_CONTENT, CaptureType.RESPONSE_CONTENT);
-
+  private WebDriverWait wait;
+  private RegistrationPage registrationPage;
+  private CustomerPanelLoginPage customerPanelLoginPage;
+  private CommonPage commonPage;
+  private Browser browser;
+  public Application () {
     browser = Browser.CHROME;
     if (browser.equals(Browser.FIREFOX)) {
       FirefoxOptions options = new FirefoxOptions();
@@ -71,22 +53,10 @@ public class TestBase {
       options.setCapability("goog:loggingPrefs", logPrefs);
       options.addArguments("--remote-allow-origins=*");
 
-
-      //DesiredCapabilities capabilities = new DesiredCapabilities();
-      //capabilities.setCapability(CapabilityType.PROXY, seleniumProxy); // пустая команда - прокси не подключается, все работает напрямую
-      //capabilities.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
-      /*
-      options.addArguments("--disable-web-security");
-      options.addArguments("--allow-insecure-localhost");
-      options.addArguments("--ignore-urlfetcher-cert-requests");
-       */
-      options.setCapability(CapabilityType.PROXY, seleniumProxy);
       options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
-      //capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-      //options.merge(capabilities);
+
       driver = new EventFiringDecorator(new MyListener()).decorate(new ChromeDriver(options));
 
-      //driver = new ChromeDriver(options);
     } else if (browser.equals(Browser.EDGE)) {
       driver = new EventFiringDecorator(new MyListener()).decorate(new EdgeDriver());
       //driver = new EdgeDriver();
@@ -95,40 +65,47 @@ public class TestBase {
       driver = new EventFiringDecorator(new MyListener()).decorate(new SafariDriver(options));
       //driver = new SafariDriver(options);
     }
-    driver.manage().timeouts().implicitlyWait(Duration.ofMillis(10000));
-    wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    driver.manage().timeouts().implicitlyWait(Duration.ofMillis(5000));
+    wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+    registrationPage = new RegistrationPage(driver);
+    customerPanelLoginPage = new CustomerPanelLoginPage(driver);
+    commonPage = new CommonPage(driver);
   }
-
-  @AfterAll
-  static public void stop() {
-    driver.quit();
-    proxy.stop();
-    driver = null;
-  }
-
-  @BeforeEach
-  public void idle() {
-
-  }
-
 
   public void loginUser(String email, String password) {
-    driver.findElement(By.cssSelector("input[name='email']")).sendKeys(email);
-    driver.findElement(By.cssSelector("input[name='password']")).sendKeys(password);
-    driver.findElement(By.cssSelector("button[name='login']")).click();
+    customerPanelLoginPage.enterEmail(email).enterPassword(password).submitLogin();
   }
 
-  protected static void logout() {
-    driver.findElement(By.cssSelector(".content .list-vertical a[href*='logout']")).click();
+  public void logout() {
+    registrationPage.logoutLink().click();
   }
-
-  @AfterEach
   public void home(){
-    s.assertAll();
-    driver.findElement(By.cssSelector("#site-menu .general-0 a")).click();
+    commonPage.homeLink().click();
+  }
+  public void registerNewCustomer(Customer customer) {
+    registrationPage.open();
+    registrationPage.firstnameInput.sendKeys(customer.getFirstname());
+    registrationPage.lastnameInput.sendKeys(customer.getLastname());
+    registrationPage.address1Input.sendKeys(customer.getAddress1());
+    registrationPage.cityInput.sendKeys(customer.getCity());
+    registrationPage.selectCountry(customer.getCountry());
+    registrationPage.inputPostCode(customer.getPostcode());
+    registrationPage.selectZone(customer.getZone());
+    registrationPage.emailInput.sendKeys(customer.getEmail());
+    registrationPage.inputPhone(customer.getPhone());
+    registrationPage.passwordInput.sendKeys(customer.getPassword());
+    registrationPage.confirmedPasswordInput.sendKeys(customer.getPassword());
+    registrationPage.createAccountButton.click();
   }
 
-  public static class MyListener implements WebDriverListener {
+  public String textSuccess(){
+    return commonPage.textSuccess();
+  }
+
+  public void quit (){
+    driver.quit();
+  }
+  public class MyListener implements WebDriverListener {
 
     @Override
     public void beforeFindElement(WebDriver driver, By locator) {
@@ -139,6 +116,7 @@ public class TestBase {
     public void afterFindElement(WebDriver driver, By locator, WebElement result) {
       //System.out.println(locator +  " found");
     }
+
     @Override
     public void onError(Object target, Method method, Object[] args, InvocationTargetException e) {
       System.out.println(e);
