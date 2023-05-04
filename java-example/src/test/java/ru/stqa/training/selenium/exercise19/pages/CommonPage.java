@@ -14,4 +14,14 @@ public class CommonPage extends Page {
   public WebElement homeLink (){
     return driver.findElement(By.cssSelector("#site-menu .general-0 a"));
   }
+  String quantityXPath = "//div[@id='cart']//span[@class='quantity']";
+  public By locatorCart(int quantity){
+    return By.xpath(quantityXPath + "[.=" + quantity + "]");
+  }
+  public String quantityCart(){
+    return driver.findElement(By.xpath(quantityXPath)).getText();
+  }
+  public String emptyCart(){
+    return driver.findElement(locatorCart(0)).getText();
+  }
 }

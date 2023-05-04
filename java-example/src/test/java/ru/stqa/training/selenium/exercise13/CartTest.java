@@ -37,7 +37,7 @@ public class CartTest extends TestBase {
     List<WebElement> dataTable = driver.findElements(By.cssSelector("table[class*='dataTable'] tr"));
     driver.findElement(By.cssSelector("button[name='remove_cart_item']")).click();// после удаления товара слайдирование товаров останавливается
     wait.until(ExpectedConditions.stalenessOf(dataTable.get(dataTable.size()-1))); // ожидание обновления таблицы внизу страницы
-    dataTable = driver.findElements(By.cssSelector("table[class*='dataTable'] tr"));
+    //dataTable = driver.findElements(By.cssSelector("table[class*='dataTable'] tr"));
     List<WebElement> elements = driver.findElements(By.cssSelector("#checkout-cart-wrapper ul[class='items']>li"));
     while (elements.size() != 0){
       elements.get(0).findElement(By.cssSelector("button[name='remove_cart_item']")).click();

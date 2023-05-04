@@ -1,5 +1,6 @@
 package ru.stqa.training.selenium.exercise19.app;
 
+import org.assertj.core.api.SoftAssertions;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -15,10 +16,9 @@ import org.openqa.selenium.safari.SafariOptions;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.events.WebDriverListener;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import ru.stqa.training.selenium.exercise19.pages.CommonPage;
-import ru.stqa.training.selenium.exercise19.pages.CustomerPanelLoginPage;
-import ru.stqa.training.selenium.exercise19.pages.RegistrationPage;
 import ru.stqa.training.selenium.exercise19.model.Customer;
+import ru.stqa.training.selenium.exercise19.model.Product;
+import ru.stqa.training.selenium.exercise19.pages.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +35,11 @@ public class Application {
   private RegistrationPage registrationPage;
   private CustomerPanelLoginPage customerPanelLoginPage;
   private CommonPage commonPage;
+  private MainPage mainPage;
+  private CartPage cartPage;
+  private ProductPage productPage;
   private Browser browser;
+  private SoftAssertions s = new SoftAssertions();
   public Application () {
     browser = Browser.CHROME;
     if (browser.equals(Browser.FIREFOX)) {
@@ -70,10 +74,16 @@ public class Application {
     registrationPage = new RegistrationPage(driver);
     customerPanelLoginPage = new CustomerPanelLoginPage(driver);
     commonPage = new CommonPage(driver);
+    mainPage = new MainPage(driver);
+    cartPage = new CartPage(driver);
+    productPage = new ProductPage(driver);
   }
 
   public void loginUser(String email, String password) {
     customerPanelLoginPage.enterEmail(email).enterPassword(password).submitLogin();
+  }
+  public void loginUserSite(String email, String password){
+    customerPanelLoginPage.open().enterEmail(email).enterPassword(password).submitLogin();
   }
 
   public void logout() {
@@ -98,6 +108,45 @@ public class Application {
     registrationPage.createAccountButton.click();
   }
 
+  public void addCartProducts(int count) {
+    for (int i = 1; i <= count; i++) {
+      addCartProduct();
+      if (i != count) {
+        home();
+      }
+    }
+  }
+  private void addCartProduct() {
+    mainPage.selectFirstProduct();
+    int quantity = Integer.parseInt(commonPage.quantityCart());
+    // для "Желтой уточки" необоходимо выбрать обязательное поле Size
+    Product duckYellow = new Product();
+    if (productPage.nameProduct().equals(duckYellow.getName())) {
+      productPage.selectSize(duckYellow.size().value());
+    }
+    productPage.addToCartButton().click();
+    quantity += 1;
+    s.assertThat(isElementPresent(driver, commonPage.locatorCart(quantity))).isTrue();
+  }
+
+  private boolean isElementPresent(WebDriver driver, By locator){
+    try{
+      driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+      return driver.findElements(locator).size() > 0;
+    }finally{
+      driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(0));
+    }
+  }
+
+  public void eraseAllCart() {
+    cartPage.open();
+    cartPage.removeFirstProduct();
+    cartPage.removeProducts();
+    home();
+  }
+  public boolean isEmptyCart(){
+    return commonPage.quantityCart().equals("0");
+  }
   public String textSuccess(){
     return commonPage.textSuccess();
   }
